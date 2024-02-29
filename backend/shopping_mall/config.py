@@ -1,10 +1,26 @@
-# shopping_mall/config.py
+# config.py
 from flask import Flask
 from flask_pymongo import PyMongo
+from pymongo import MongoClient
+from flask_jwt_extended import JWTManager
+from datetime import timedelta
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
 
-# MongoDB set up
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/shopping_mall'
+    # MongoDB setup
+    app.config['MONGO_URI'] = 'mongodb://localhost:27017/shopping_mall'
+    # jwt setup
+    app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)
 
-mongo = PyMongo(app)
+    jwt = JWTManager(app)
+
+    # Connect to MongoDB
+    mongo = MongoClient(app.config['MONGO_URI'])
+    
+    app.mongo = mongo
+    # Access the database using mongo['shopping_mall']
+    app.db = mongo.shopping_mall
+
+    return app
