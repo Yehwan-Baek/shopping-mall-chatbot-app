@@ -13,8 +13,7 @@ def create_app():
     # jwt setup
     app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)
-
-    jwt = JWTManager(app)
+    app.config['JWT_HEADER_TYPE'] = 'Bearer'
 
     # Connect to MongoDB
     mongo = MongoClient(app.config['MONGO_URI'])

@@ -2,11 +2,11 @@
 import sys
 sys.path.append('/home/yehwan/Development/code/shopping-mall-chatbot-app/backend/')
 from routes.user import user_blueprint
+from flask_jwt_extended import JWTManager
 from config import create_app
 
 app = create_app()
-
-# Initialize MongoDB
+jwt = JWTManager(app)
 
 app.register_blueprint(user_blueprint, url_prefix='/user')
 
