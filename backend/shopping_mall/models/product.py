@@ -17,11 +17,16 @@ class Product:
         if products:
             return products
 
+    @classmethod
+    def find_by_product_name(cls, name):
+        products_collection = current_app.mongo.db.product
+        product = products_collection.find_one({'name' : name})
+
     # find by product id
     @classmethod
     def find_by_id(cls, product_id):
         products_collection = current_app.mongo.db.products
-        product = products_collection.find_one({'_id': product_id})
+        product = products_collection.find_one({'_id' : product_id})
         return product
     
     # create new product data
