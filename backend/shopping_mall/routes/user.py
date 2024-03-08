@@ -59,16 +59,3 @@ def mypage():
         response_data = {'message': 'User not found'}
         response = make_response(jsonify(response_data), 404)
         return response
-
-
-
-# @user_blueprint.route('/mypage', methods=['GET'])
-# 
-# def mypage():
-#     current_user = get_jwt_identity()
-#     user = User.find_by_username(current_user)
-
-#     if user:
-#         return create_response('User found', additional_data={'username': user.username})
-#     else:
-#         return create_response('User not found', status_code=404)
