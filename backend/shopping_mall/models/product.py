@@ -21,10 +21,12 @@ class Product:
 
         return products
 
+    # find by product name
     @classmethod
     def find_by_product_name(cls, name):
         products_collection = current_app.mongo.db.product
         product = products_collection.find_one({'name' : name})
+        return product
 
     # find by product id
     @classmethod
@@ -36,9 +38,7 @@ class Product:
     # create new product data
     @classmethod
     def create_product(cls, name, image, price, qty):
-        products_collection = current_app.mongo.shopping_mall.products
-        
-        existing_product = products_collection.find_one({'name':name})
+        existing_product = cls.find_by_product_name(name)
         if existing_product:
             raise ValueError('Product already exists')
 

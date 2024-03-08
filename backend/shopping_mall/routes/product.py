@@ -1,9 +1,23 @@
 # routes/product.py
-from flask import Blueprint, request, make_response, jsonify, render_template
+from flask import Blueprint, request, make_response, jsonify
 from shopping_mall.models.product import Product
 
 # set blue print
 product_blueprint = Blueprint('product',__name__)
+
+# route to find a product detail
+@product_blueprint.route('/<string:product_id>', methods=['GET'])
+def get_product_detail(product_id):
+    try:
+        # retrieve product by id
+        product = Product.find_by_id(product_id)
+
+        if not product:
+            return jsonify(message='Product not found'), 404
+
+        return jsonify({"product": product}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # route to find all product
 @product_blueprint.route('/', methods=['GET'])
@@ -27,7 +41,7 @@ def create_product():
         qty = data.get('qty')
 
         if Product.find_by_product_name(name):
-            return jsonify(message='Product already exists'), 400
+            return jsonify(message='Product name already exists'), 400
         new_product = Product.create_product(name, image, price, qty)
         return jsonify({"message": "Product created successfully", "product": new_product.__dict__}), 201
     except ValueError as ve:
