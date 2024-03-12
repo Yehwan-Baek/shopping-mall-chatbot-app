@@ -1,5 +1,7 @@
 # models/cart.py
 from flask import current_app
+from datetime import datetime
+import pytz
 
 class CartItem:
     def __init__(self, product_id, qty):
@@ -7,9 +9,13 @@ class CartItem:
         self.qty = qty
 
 class ShoppingCart:
+    # add date and payment status
     def __init__(self, user_id):
         self.user_id = user_id
         self.items = []
+        self.creation_date = datetime.now(pytz.timezone("Australia/Sydney"))  # Set creation date in Sydney timezone
+        self.status = "Active"
+        # another status : "Pending", "Complete", "Cancled", "Expired"
 
     # add item in list of cart
     def add_item(self, product_id, quantity):
