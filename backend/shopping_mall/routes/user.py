@@ -16,12 +16,25 @@ def login():
     user = User.find_by_username(username)
 
     if user and user.check_password(password):
-        access_token = user.get_token()
+        access_token, refresh_token = user.get_tokens()
 
         identity = user.username
-        return jsonify(access_token=access_token, identity=identity), 200
+        return jsonify(access_token=access_token, refresh_token=refresh_token, identity=identity), 200
     else:
         return jsonify(message='Invalid credentials'), 401
+
+# route to refresh access token
+@user_blueprint.route('/refresh', methods=['POST'])
+@jwt_required(refresh=True)
+def refresh():
+    current_user = get_jwt_identity()
+    user = User.find_by_username(current_user)
+
+    if user:
+        access_token = user.get_tokens()
+        return jsonify(access_token=access_token), 200
+    else:
+        return jsonify(message='User not found'), 404
 
 # route to register
 @user_blueprint.route('/register', methods=['POST'])
@@ -46,7 +59,6 @@ def logout():
 
 # route to mypage
 @user_blueprint.route('/mypage', methods=['GET'])
-@jwt_required()
 def mypage():
     current_user = get_jwt_identity()
     user = User.find_by_username(current_user)

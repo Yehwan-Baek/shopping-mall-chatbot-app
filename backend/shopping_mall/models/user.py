@@ -31,8 +31,11 @@ class User:
         return check_password_hash(self.password, password)
 
     # get jwt athentication
-    def get_token(self):
-        return create_access_token(identity=self.username)
+    def get_tokens(self):
+        access_token = create_access_token(identity=self.username)
+        refresh_token = create_refresh_token(identity=self.username)
+
+        return access_token, refresh_token
 
     # find by username
     @classmethod
